@@ -1,77 +1,99 @@
-<mat-card class="example-card">
-  <mat-card-header>
-    <mat-card-title>mini M&E</mat-card-title>
-    <mat-card-subtitle>Project for university</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <!-- This is the tree node template for leaf nodes -->
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <button mat-icon-button disabled></button>
-        {{ node.name }}
-        <button mat-icon-button *ngIf="treeControl.getLevel(node) !== 2" matTooltip="Add">
-          <mat-icon class="mat-icon-rtl-mirror">
-            add
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Show description">
-          <mat-icon class="mat-icon-rtl-mirror">
-            message
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Show Indicators">
-          <mat-icon class="mat-icon-rtl-mirror">
-            menu
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Edit">
-          <mat-icon class="mat-icon-rtl-mirror">
-            edit
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Delete">
-          <mat-icon class="mat-icon-rtl-mirror">
-            delete
-          </mat-icon>
-        </button>
-      </mat-tree-node>
-      <!-- This is the tree node template for expandable nodes -->
-      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding fxLayout>
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
-          </mat-icon>
-        </button>
-        {{ node.name }}
-        <button mat-icon-button *ngIf="treeControl.getLevel(node) !== 2" matTooltip="Add">
-          <mat-icon class="mat-icon-rtl-mirror">
-            add
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Show description">
-          <mat-icon class="mat-icon-rtl-mirror">
-            message
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Show Indicators">
-          <mat-icon class="mat-icon-rtl-mirror">
-            menu
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Edit" fxLayoutAlign="center" >
-          <mat-icon class="mat-icon-rtl-mirror">
-            edit
-          </mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Delete">
-          <mat-icon class="mat-icon-rtl-mirror">
-            delete
-          </mat-icon>
-        </button>
-      </mat-tree-node>
-    </mat-tree>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button color="primary">Add</button>
-  </mat-card-actions>
-</mat-card>
+<mat-drawer-container class="example-container">
+  <mat-drawer #drawer mode="over" opened="false" position="end" class="drawer" >
+    <indicators-list></indicators-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>mini_M&E</mat-card-title>
+        <mat-card-subtitle>Monitoring & Evaluation</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <!-- This is the tree node template for leaf nodes -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding appMatElevation>
+            <button mat-icon-button disabled></button>
+            {{ node.name }}
+            <button mat-icon-button *ngIf="treeControl.getLevel(node) !== 2" matTooltip="Add Child Level"
+                    (click)="openFrameworkLevel(node.item, true)">
+              <mat-icon class="mat-icon-rtl-mirror">
+                add
+              </mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Show description"
+                    (click)="showDescription(node.item)">
+              <mat-icon class="mat-icon-rtl-mirror">
+                message
+              </mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Show Indicators"
+                    (click)="drawer.toggle()">
+              <mat-icon class="mat-icon-rtl-mirror">
+                menu
+              </mat-icon>
+            </button>
+            <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
+              <button mat-icon-button matTooltip="Edit"
+                      (click)="openFrameworkLevel(node.item)">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  edit
+                </mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Delete"
+                      (click)="deleteFrameworkLevel(node.item.id)">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  delete
+                </mat-icon>
+              </button>
+            </div>
+          </mat-tree-node>
+          <!-- This is the tree node template for expandable nodes -->
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding fxLayout
+                         appMatElevation>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+              </mat-icon>
+            </button>
+            {{ node.name }}
+            <button mat-icon-button *ngIf="treeControl.getLevel(node) !== 2" matTooltip="Add Child Level"
+                    (click)="openFrameworkLevel(node.item, true)">
+              <mat-icon class="mat-icon-rtl-mirror">
+                add
+              </mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Show description"
+                    (click)="showDescription(node.item)">
+              <mat-icon class="mat-icon-rtl-mirror">
+                message
+              </mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Show Indicators"
+                    (click)="drawer.toggle()">
+              <mat-icon class="mat-icon-rtl-mirror">
+                menu
+              </mat-icon>
+            </button>
+            <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
+              <button mat-icon-button matTooltip="Edit"
+                      (click)="openFrameworkLevel(node.item)">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  edit
+                </mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Delete"
+                      (click)="deleteFrameworkLevel(node.item.id)">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  delete
+                </mat-icon>
+              </button>
+            </div>
+          </mat-tree-node>
+        </mat-tree>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="openFrameworkLevel()">Add</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-drawer-content>
+</mat-drawer-container>

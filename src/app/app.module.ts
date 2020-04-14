@@ -8,23 +8,49 @@ import { MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
-import {MatTooltipModule} from '@angular/material/tooltip';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { AppMatElevationDirective } from "./shared/directives/app-mat-elevation.directive";
+import { ShowMessagePopupComponent } from "./shared/components/show-message-popup/show-message-popup.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { FrameworkLevelPopupComponent } from "./shared/components/framework-level-popup/framework-level-popup.component";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {AngularFireModule} from "@angular/fire";
+import {environment} from "../environments/environment";
+import {AngularFirestoreModule} from "@angular/fire/firestore";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import { IndicatorsListComponent } from './shared/components/indicators-list/indicators-list.component';
 
 @NgModule({
-  declarations: [AppComponent],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatTreeModule,
-        MatIconModule,
-        MatButtonModule,
-        MatCardModule,
-        MatTooltipModule,
-        FlexLayoutModule
-    ],
+  declarations: [
+    AppComponent,
+    AppMatElevationDirective,
+    ShowMessagePopupComponent,
+    FrameworkLevelPopupComponent,
+    IndicatorsListComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatTooltipModule,
+    FlexLayoutModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSidenavModule
+  ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

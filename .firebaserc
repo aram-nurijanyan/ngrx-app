@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "test-demo-966d9": {
+      "hosting": {
+        "ngrx-app": [
+          "test-demo-966d9"
+        ]
+      }
+    }
+  }
+}
