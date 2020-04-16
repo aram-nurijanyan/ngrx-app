@@ -1,6 +1,6 @@
 <mat-drawer-container class="example-container">
   <mat-drawer #drawer mode="over" opened="false" position="end" class="drawer" >
-    <indicators-list></indicators-list>
+    <indicators-list [indicators]="selectedIndicators" ></indicators-list>
   </mat-drawer>
   <mat-drawer-content>
     <mat-card>
@@ -14,7 +14,7 @@
           <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding appMatElevation>
             <button mat-icon-button disabled></button>
             {{ node.name }}
-            <button mat-icon-button *ngIf="treeControl.getLevel(node) !== 2" matTooltip="Add Child Level"
+            <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Add Child Level"
                     (click)="openFrameworkLevel(node.item, true)">
               <mat-icon class="mat-icon-rtl-mirror">
                 add
@@ -27,7 +27,7 @@
               </mat-icon>
             </button>
             <button mat-icon-button matTooltip="Show Indicators"
-                    (click)="drawer.toggle()">
+                    (click)="openIndicators(node.item)">
               <mat-icon class="mat-icon-rtl-mirror">
                 menu
               </mat-icon>
@@ -56,7 +56,7 @@
               </mat-icon>
             </button>
             {{ node.name }}
-            <button mat-icon-button *ngIf="treeControl.getLevel(node) !== 2" matTooltip="Add Child Level"
+            <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Add Child Level"
                     (click)="openFrameworkLevel(node.item, true)">
               <mat-icon class="mat-icon-rtl-mirror">
                 add
@@ -68,12 +68,12 @@
                 message
               </mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Show Indicators"
-                    (click)="drawer.toggle()">
-              <mat-icon class="mat-icon-rtl-mirror">
-                menu
-              </mat-icon>
-            </button>
+<!--            <button mat-icon-button matTooltip="Show Indicators"-->
+<!--                    (click)="drawer.toggle()">-->
+<!--              <mat-icon class="mat-icon-rtl-mirror">-->
+<!--                menu-->
+<!--              </mat-icon>-->
+<!--            </button>-->
             <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
               <button mat-icon-button matTooltip="Edit"
                       (click)="openFrameworkLevel(node.item)">

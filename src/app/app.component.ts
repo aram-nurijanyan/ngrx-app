@@ -1,15 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { FlatTreeControl } from "@angular/cdk/tree";
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
-} from "@angular/material/tree";
-import { FrameworkLevelModel } from "./shared/models/framework-level.model";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { ShowMessagePopupComponent } from "./shared/components/show-message-popup/show-message-popup.component";
-import { FrameworkLevelPopupComponent } from "./shared/components/framework-level-popup/framework-level-popup.component";
-import { AngularFirestore, DocumentReference } from "@angular/fire/firestore";
-import { getTree } from "./shared/utils/tree.util";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {FlatTreeControl} from "@angular/cdk/tree";
+import {MatTreeFlatDataSource, MatTreeFlattener,} from "@angular/material/tree";
+import {FrameworkLevelModel} from "./shared/models/framework-level.model";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {ShowMessagePopupComponent} from "./shared/components/show-message-popup/show-message-popup.component";
+import {FrameworkLevelPopupComponent} from "./shared/components/framework-level-popup/framework-level-popup.component";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {getTree} from "./shared/utils/tree.util";
+import {IndicatorModel} from "./shared/models/indicator.model";
+import {MatDrawer} from "@angular/material/sidenav";
+import {ConfirmationPopupComponent} from "./shared/components/confirmation-popup/confirmation-popup.component";
 
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
@@ -25,6 +25,8 @@ interface ExampleFlatNode {
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
+  selectedIndicators: IndicatorModel[] = [];
+
   private _transformer = (node: FrameworkLevelModel, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -48,15 +50,22 @@ export class AppComponent implements OnInit {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
+  @ViewChild(MatDrawer, { static: true }) drawer: MatDrawer;
+
   constructor(private dialog: MatDialog, private firestore: AngularFirestore) {}
 
   ngOnInit() {
     this.firestore
       .collection<FrameworkLevelModel>("frameworkLevels")
       .valueChanges({ idField: "id" })
-      .subscribe((data: FrameworkLevelModel[]) => {
-        this.dataSource.data = getTree(data);
-      });
+      .subscribe(levels => {
+        this.firestore
+          .collection<IndicatorModel>("indicators")
+          .valueChanges({ idField: "id" })
+          .subscribe(indicators => {
+            this.dataSource.data = getTree(levels, indicators);
+          })
+      })
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -101,6 +110,24 @@ export class AppComponent implements OnInit {
   }
 
   deleteFrameworkLevel(id: string) {
-    this.firestore.collection("frameworkLevels").doc(id).delete();
+    this.dialog.open(ConfirmationPopupComponent)
+      .afterClosed().subscribe((answer: boolean) => {
+        if(answer) {
+          this.firestore.collection("frameworkLevels").doc(id).delete();
+        }
+    })
+  }
+
+  openIndicators(frameworkLevel: FrameworkLevelModel) {
+    this.selectedIndicators = frameworkLevel.indicators || [];
+    this.drawer.toggle();
+  }
+
+  canAddChild(frameworkLevel: FrameworkLevelModel): boolean {
+    if(frameworkLevel.indicators) {
+      return false;
+    } else {
+      return frameworkLevel.level !== 2;
+    }
   }
 }

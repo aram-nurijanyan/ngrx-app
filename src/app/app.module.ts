@@ -22,6 +22,10 @@ import {environment} from "../environments/environment";
 import {AngularFirestoreModule} from "@angular/fire/firestore";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import { IndicatorsListComponent } from './shared/components/indicators-list/indicators-list.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import { ConfirmationPopupComponent } from './shared/components/confirmation-popup/confirmation-popup.component';
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
   declarations: [
@@ -30,6 +34,7 @@ import { IndicatorsListComponent } from './shared/components/indicators-list/ind
     ShowMessagePopupComponent,
     FrameworkLevelPopupComponent,
     IndicatorsListComponent,
+    ConfirmationPopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +53,10 @@ import { IndicatorsListComponent } from './shared/components/indicators-list/ind
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent],
