@@ -26,6 +26,10 @@ import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import { ConfirmationPopupComponent } from './shared/components/confirmation-popup/confirmation-popup.component';
 import {MatSortModule} from "@angular/material/sort";
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { IndicatorPopupComponent } from './shared/components/indicator-popup/indicator-popup.component';
+import { NumbersOnlyDirective } from './shared/directives/numbers-only.directive';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,8 @@ import {MatSortModule} from "@angular/material/sort";
     FrameworkLevelPopupComponent,
     IndicatorsListComponent,
     ConfirmationPopupComponent,
+    IndicatorPopupComponent,
+    NumbersOnlyDirective,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +62,9 @@ import {MatSortModule} from "@angular/material/sort";
     MatSidenavModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatProgressBarModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent],

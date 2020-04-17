@@ -1,11 +1,14 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatSort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
-import { IndicatorModel } from "../../models/indicator.model";
-import {ConfirmationPopupComponent} from "../confirmation-popup/confirmation-popup.component";
-import {MatDialog} from "@angular/material/dialog";
-import {AngularFirestore} from "@angular/fire/firestore";
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {IndicatorModel} from '../../models/indicator.model';
+import {ConfirmationPopupComponent} from '../confirmation-popup/confirmation-popup.component';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {FrameworkLevelModel} from '../../models/framework-level.model';
+import {IndicatorPopupComponent} from '../indicator-popup/indicator-popup.component';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: "indicators-list",
@@ -13,10 +16,8 @@ import {AngularFirestore} from "@angular/fire/firestore";
   styleUrls: ["./indicators-list.component.scss"],
 })
 export class IndicatorsListComponent implements OnInit {
-  @Input('indicators')
-  set indicators(value: IndicatorModel[]) {
-    this.dataSource && (this.dataSource.data = value);
-  }
+  @Input() getSelectedLevel$: Observable<string>;
+  levelId: string;
 
   displayedColumns: string[] = [
     "name",
@@ -35,9 +36,16 @@ export class IndicatorsListComponent implements OnInit {
               private firestore: AngularFirestore) {}
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.indicators);
+    this.dataSource = new MatTableDataSource();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.getSelectedLevel$.subscribe((id: string) => {
+      this.levelId = id;
+      id && this.firestore.collection('indicators', ref => ref.where('levelId', '==', id))
+        .valueChanges({idField: 'id'}).subscribe((data: IndicatorModel[]) => {
+          this.dataSource && (this.dataSource.data = data);
+        })
+    });
   }
 
   applyFilter(event: Event) {
@@ -49,8 +57,30 @@ export class IndicatorsListComponent implements OnInit {
     }
   }
 
-  openIndicatorPopup(indicator: IndicatorModel) {
-
+  openIndicatorPopup(indicator?: IndicatorModel) {
+      const dialogConfig: MatDialogConfig = new MatDialogConfig();
+      dialogConfig.data = {
+        title: `${indicator ? "Edit" : "Add"} Indicator`,
+        indicator,
+        levelId: this.levelId,
+      };
+      dialogConfig.disableClose = true;
+      dialogConfig.width = "600px";
+      this.dialog
+        .open(IndicatorPopupComponent, dialogConfig)
+        .afterClosed()
+        .subscribe((indicatorItem: IndicatorModel) => {
+          if (indicatorItem) {
+            if (indicator) {
+              this.firestore
+                .collection("indicators")
+                .doc(indicator.id)
+                .update(indicatorItem);
+            } else {
+              this.firestore.collection("indicators").add(indicatorItem);
+            }
+          }
+        });
   }
 
   deleteIndicator(id: string) {

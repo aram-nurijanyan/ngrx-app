@@ -14,19 +14,17 @@ export function getTree(
     arrElem = levels[i];
     mappedArr[arrElem.id] = arrElem;
     mappedArr[arrElem.id]["children"] = [];
+    mappedArr[arrElem.id]["indicators"] = [];
   }
 
   for (const id in mappedArr) {
     if (mappedArr.hasOwnProperty(id)) {
       mappedElem = mappedArr[id];
-      const indicator: IndicatorModel = indicators.find(
+      const filteredIndicators: IndicatorModel[] = indicators.filter(
         (i: IndicatorModel) => i.levelId === id
       );
-      if (indicator) {
-        if (!mappedElem.indicators) {
-          mappedElem.indicators = [];
-        }
-        mappedElem.indicators.push(indicator);
+      if (filteredIndicators) {
+        mappedElem.indicators.push(...filteredIndicators);
       }
       // If the element is not at the root level, add it to its parent array of children.
       if (mappedElem.parentId) {
@@ -39,4 +37,22 @@ export function getTree(
     }
   }
   return tree;
+}
+
+export function getProgress(frameworkLevel: FrameworkLevelModel): number {
+  if(!frameworkLevel.children.length) {
+    return getLevelProgress(frameworkLevel);
+  }
+  let result: number = 0;
+  frameworkLevel.children.forEach((child: FrameworkLevelModel) => {
+    result += getProgress(child)/frameworkLevel.children.length;
+  });
+  return result;
+}
+
+export function getLevelProgress(frameworkLevel: FrameworkLevelModel): number {
+  return frameworkLevel.indicators.reduce((res, indicator) => {
+    res += indicator.progress/frameworkLevel.indicators.length;
+    return res;
+  }, 0);
 }

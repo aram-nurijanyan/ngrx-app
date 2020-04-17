@@ -5,5 +5,6 @@ export interface IndicatorModel {
   actual: number,
   target: number,
   measurement: string
-  levelId: string
+  levelId: string,
+  progress: number
 }

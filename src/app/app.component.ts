@@ -6,10 +6,11 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ShowMessagePopupComponent} from "./shared/components/show-message-popup/show-message-popup.component";
 import {FrameworkLevelPopupComponent} from "./shared/components/framework-level-popup/framework-level-popup.component";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {getTree} from "./shared/utils/tree.util";
+import {getProgress, getTree} from './shared/utils/tree.util';
 import {IndicatorModel} from "./shared/models/indicator.model";
 import {MatDrawer} from "@angular/material/sidenav";
 import {ConfirmationPopupComponent} from "./shared/components/confirmation-popup/confirmation-popup.component";
+import {Subject} from 'rxjs';
 
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
@@ -25,7 +26,7 @@ interface ExampleFlatNode {
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  selectedIndicators: IndicatorModel[] = [];
+  selectedLevel: Subject<string> = new Subject<string>();
 
   private _transformer = (node: FrameworkLevelModel, level: number) => {
     return {
@@ -118,16 +119,20 @@ export class AppComponent implements OnInit {
     })
   }
 
-  openIndicators(frameworkLevel: FrameworkLevelModel) {
-    this.selectedIndicators = frameworkLevel.indicators || [];
+  openIndicators(id: string) {
+    this.selectedLevel.next(id);
     this.drawer.toggle();
   }
 
   canAddChild(frameworkLevel: FrameworkLevelModel): boolean {
-    if(frameworkLevel.indicators) {
+    if(frameworkLevel.indicators.length) {
       return false;
     } else {
       return frameworkLevel.level !== 2;
     }
+  }
+
+  getProgress(frameworkLevel: FrameworkLevelModel): number {
+    return getProgress(frameworkLevel);
   }
 }

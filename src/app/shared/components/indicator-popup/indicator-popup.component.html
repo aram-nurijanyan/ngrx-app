@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<mat-dialog-content (keydown.enter)="confirm()">
+  <form [formGroup]="indicatorForm">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name">
+      <mat-error *ngIf="indicatorForm.get('name').invalid && indicatorForm.get('name').touched">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Baseline</mat-label>
+      <input matInput formControlName="baseline" numbersOnly>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Actual</mat-label>
+      <input matInput formControlName="actual" numbersOnly>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Target</mat-label>
+      <input matInput formControlName="target" numbersOnly>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Measurement</mat-label>
+      <mat-select formControlName="measurement">
+        <mat-option *ngFor="let measurement of measurements$ | async" [value]="measurement.name">
+          {{measurement.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout fxLayoutAlign="flex-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="confirm()"
+          [disabled]="!indicatorForm.valid"
+          color="primary">OK</button>
+</mat-dialog-actions>
