@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
   ) {
     const dialogConfig: MatDialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      title: `${frameworkLevel ? "Edit" : "Add"} Framework Level`,
+      title: `${frameworkLevel && !addChild ? "Edit" : "Add"} Framework Level`,
       frameworkLevel: addChild ? null : frameworkLevel,
       parentId: addChild ? frameworkLevel.id : null,
       level: addChild ? frameworkLevel.level : null,

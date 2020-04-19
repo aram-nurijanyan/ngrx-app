@@ -30,6 +30,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { IndicatorPopupComponent } from './shared/components/indicator-popup/indicator-popup.component';
 import { NumbersOnlyDirective } from './shared/directives/numbers-only.directive';
 import {MatSelectModule} from '@angular/material/select';
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatRippleModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import {MatSelectModule} from '@angular/material/select';
     MatPaginatorModule,
     MatSortModule,
     MatProgressBarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatToolbarModule,
+    MatRippleModule
   ],
   providers: [],
   bootstrap: [AppComponent],
