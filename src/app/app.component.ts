@@ -81,15 +81,17 @@ export class AppComponent implements OnInit {
   }
 
   openFrameworkLevel(
+    event: Event,
     frameworkLevel?: FrameworkLevelModel,
     addChild: boolean = false
   ) {
+    event.stopPropagation();
     const dialogConfig: MatDialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      title: `${frameworkLevel && !addChild ? "Edit" : "Add"} Framework Level`,
       frameworkLevel: addChild ? null : frameworkLevel,
       parentId: addChild ? frameworkLevel.id : null,
       level: addChild ? frameworkLevel.level : null,
+      viewMode: frameworkLevel && !addChild
     };
     dialogConfig.disableClose = true;
     dialogConfig.width = "600px";
@@ -110,7 +112,8 @@ export class AppComponent implements OnInit {
       });
   }
 
-  deleteFrameworkLevel(id: string) {
+  deleteFrameworkLevel(event: Event, id: string) {
+    event.stopPropagation();
     this.dialog.open(ConfirmationPopupComponent)
       .afterClosed().subscribe((answer: boolean) => {
         if(answer) {

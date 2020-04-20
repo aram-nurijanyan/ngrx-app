@@ -9,7 +9,7 @@ import { FrameworkLevelModel } from "../../models/framework-level.model";
   styleUrls: ["./framework-level-popup.component.scss"],
 })
 export class FrameworkLevelPopupComponent implements OnInit {
-  title: string;
+  viewMode: boolean;
   nameFormControl: FormControl;
   descriptionFormControl: FormControl;
   frameworkLevel: FrameworkLevelModel;
@@ -20,18 +20,22 @@ export class FrameworkLevelPopupComponent implements OnInit {
               private dialogRef: MatDialogRef<FrameworkLevelPopupComponent>) {}
 
   ngOnInit() {
-    this.title = this.data.title || "";
+    this.viewMode = this.data.viewMode;
     this.parentId = this.data.parentId;
     this.level = this.data.level+1 || 0;
     this.frameworkLevel = this.data.frameworkLevel
       ? this.data.frameworkLevel
       : { name: "", description: "", level: this.level };
-    this.nameFormControl = new FormControl(this.frameworkLevel.name, [
+    this.nameFormControl = new FormControl({
+      value: this.frameworkLevel.name,
+      disabled: this.viewMode
+    }, [
       Validators.required,
     ]);
-    this.descriptionFormControl = new FormControl(
-      this.frameworkLevel.description
-    );
+    this.descriptionFormControl = new FormControl({
+      value: this.frameworkLevel.description,
+      disabled: this.viewMode
+    });
   }
 
   confirm() {
@@ -43,5 +47,11 @@ export class FrameworkLevelPopupComponent implements OnInit {
       this.frameworkLevel.description = this.descriptionFormControl.value;
       this.dialogRef.close(this.frameworkLevel);
     }
+  }
+
+  edit() {
+    this.viewMode = false;
+    this.nameFormControl.enable();
+    this.descriptionFormControl.enable();
   }
 }

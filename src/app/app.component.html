@@ -13,39 +13,29 @@
       <mat-card-content>
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
           <!-- This is the tree node template for leaf nodes -->
-          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding appMatElevation>
+          <mat-tree-node *matTreeNodeDef="let node" class="pointer"
+                         (click)="openIndicators(node.item.id)"
+                         matTreeNodePadding appMatElevation>
             <button mat-icon-button disabled></button>
             {{ node.name }}
             <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Add Child Level"
-                    (click)="openFrameworkLevel(node.item, true)">
+                    (click)="openFrameworkLevel($event, node.item, true)">
               <mat-icon class="mat-icon-rtl-mirror icon">
                 add
-              </mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="Show description"
-                    (click)="showDescription(node.item)">
-              <mat-icon class="mat-icon-rtl-mirror icon">
-                message
-              </mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="Show Indicators"
-                    (click)="openIndicators(node.item.id)">
-              <mat-icon class="mat-icon-rtl-mirror icon">
-                format_list_bulleted
               </mat-icon>
             </button>
             <mat-progress-bar style="width: 40%; margin-left: 6rem" mode="determinate"
                               [value]="getProgress(node.item)"></mat-progress-bar>
             <span style="margin-left: 1rem">{{getProgress(node.item) | number: '1.0-1'}}%</span>
             <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
-              <button mat-icon-button matTooltip="Edit"
-                      (click)="openFrameworkLevel(node.item)">
+              <button mat-icon-button matTooltip="View"
+                      (click)="openFrameworkLevel($event, node.item)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
-                  edit
+                  visibility
                 </mat-icon>
               </button>
               <button mat-icon-button matTooltip="Delete"
-                      (click)="deleteFrameworkLevel(node.item.id)">
+                      (click)="deleteFrameworkLevel($event, node.item.id)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
                   delete
                 </mat-icon>
@@ -53,7 +43,9 @@
             </div>
           </mat-tree-node>
           <!-- This is the tree node template for expandable nodes -->
-          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding fxLayout
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild"
+                         matTreeNodePadding fxLayout class="pointer"
+                         (click)="openFrameworkLevel($event, node.item)"
                          appMatElevation>
             <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
               <mat-icon class="mat-icon-rtl-mirror icon">
@@ -62,29 +54,23 @@
             </button>
             {{ node.name }}
             <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Add Child Level"
-                    (click)="openFrameworkLevel(node.item, true)">
+                    (click)="openFrameworkLevel($event, node.item, true)">
               <mat-icon class="mat-icon-rtl-mirror icon">
                 add
-              </mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="Show description"
-                    (click)="showDescription(node.item)">
-              <mat-icon class="mat-icon-rtl-mirror icon">
-                message
               </mat-icon>
             </button>
             <mat-progress-bar style="width: 40%; margin-left: 6rem" mode="determinate"
                               [value]="getProgress(node.item)"></mat-progress-bar>
             <span style="margin-left: 1rem">{{getProgress(node.item) | number: '1.0-1'}}%</span>
             <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
-              <button mat-icon-button matTooltip="Edit"
-                      (click)="openFrameworkLevel(node.item)">
+              <button mat-icon-button matTooltip="View"
+                      (click)="openFrameworkLevel($event, node.item)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
-                  edit
+                  visibility
                 </mat-icon>
               </button>
               <button mat-icon-button matTooltip="Delete"
-                      (click)="deleteFrameworkLevel(node.item.id)">
+                      (click)="deleteFrameworkLevel($event, node.item.id)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
                   delete
                 </mat-icon>
@@ -94,7 +80,7 @@
         </mat-tree>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">
-          <button mat-icon-button  color="primary" (click)="openFrameworkLevel()">
+          <button mat-icon-button  color="primary" (click)="openFrameworkLevel($event)">
             <mat-icon class="mat-icon-rtl-mirror">
               add_circle
             </mat-icon>

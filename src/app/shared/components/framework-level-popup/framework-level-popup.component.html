@@ -1,4 +1,11 @@
-<h2 mat-dialog-title>{{title}}</h2>
+<h2 mat-dialog-title>Framework Level
+  <button mat-icon-button *ngIf="viewMode" matTooltip="Edit"
+          (click)="edit()">
+    <mat-icon class="mat-icon-rtl-mirror icon">
+      edit
+    </mat-icon>
+  </button>
+</h2>
 <mat-dialog-content (keydown.enter)="confirm()">
   <form>
     <mat-form-field appearance="outline" style="width: 100%">
@@ -10,7 +17,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Description</mat-label>
-      <textarea matInput style="resize: none" [formControl]="descriptionFormControl" ></textarea>
+      <textarea matInput [formControl]="descriptionFormControl" ></textarea>
     </mat-form-field>
   </form>
 </mat-dialog-content>
