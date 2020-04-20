@@ -10,18 +10,18 @@
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Baseline</mat-label>
-      <input matInput formControlName="baseline" numbersOnly>
+      <input matInput formControlName="baseline" digitOnly>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Actual</mat-label>
-      <input matInput formControlName="actual" numbersOnly>
+      <input matInput formControlName="actual" digitOnly>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Target</mat-label>
-      <input matInput formControlName="target" numbersOnly>
+      <input matInput formControlName="target" digitOnly>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Measurement</mat-label>
+      <mat-label>Unit of measure</mat-label>
       <mat-select formControlName="measurement">
         <mat-option *ngFor="let measurement of measurements$ | async" [value]="measurement.name">
           {{measurement.name}}

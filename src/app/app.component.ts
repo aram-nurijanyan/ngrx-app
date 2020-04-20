@@ -1,16 +1,19 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {FlatTreeControl} from "@angular/cdk/tree";
-import {MatTreeFlatDataSource, MatTreeFlattener,} from "@angular/material/tree";
-import {FrameworkLevelModel} from "./shared/models/framework-level.model";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {ShowMessagePopupComponent} from "./shared/components/show-message-popup/show-message-popup.component";
-import {FrameworkLevelPopupComponent} from "./shared/components/framework-level-popup/framework-level-popup.component";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {getProgress, getTree} from './shared/utils/tree.util';
-import {IndicatorModel} from "./shared/models/indicator.model";
-import {MatDrawer} from "@angular/material/sidenav";
-import {ConfirmationPopupComponent} from "./shared/components/confirmation-popup/confirmation-popup.component";
-import {Subject} from 'rxjs';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { FlatTreeControl } from "@angular/cdk/tree";
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+} from "@angular/material/tree";
+import { FrameworkLevelModel } from "./shared/models/framework-level.model";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { ShowMessagePopupComponent } from "./shared/components/show-message-popup/show-message-popup.component";
+import { FrameworkLevelPopupComponent } from "./shared/components/framework-level-popup/framework-level-popup.component";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { getProgress, getTree } from "./shared/utils/tree.util";
+import { IndicatorModel } from "./shared/models/indicator.model";
+import { MatDrawer } from "@angular/material/sidenav";
+import { ConfirmationPopupComponent } from "./shared/components/confirmation-popup/confirmation-popup.component";
+import { Subject } from "rxjs";
 
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
@@ -59,14 +62,14 @@ export class AppComponent implements OnInit {
     this.firestore
       .collection<FrameworkLevelModel>("frameworkLevels")
       .valueChanges({ idField: "id" })
-      .subscribe(levels => {
+      .subscribe((levels) => {
         this.firestore
           .collection<IndicatorModel>("indicators")
           .valueChanges({ idField: "id" })
-          .subscribe(indicators => {
+          .subscribe((indicators) => {
             this.dataSource.data = getTree(levels, indicators);
-          })
-      })
+          });
+      });
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -90,8 +93,8 @@ export class AppComponent implements OnInit {
     dialogConfig.data = {
       frameworkLevel: addChild ? null : frameworkLevel,
       parentId: addChild ? frameworkLevel.id : null,
-      level: addChild ? frameworkLevel.level : null,
-      viewMode: frameworkLevel && !addChild
+      level: addChild ? frameworkLevel.level+1 : 0,
+      viewMode: frameworkLevel && !addChild,
     };
     dialogConfig.disableClose = true;
     dialogConfig.width = "600px";
@@ -112,14 +115,29 @@ export class AppComponent implements OnInit {
       });
   }
 
-  deleteFrameworkLevel(event: Event, id: string) {
+  deleteFrameworkLevel(event: Event, frameworkLevel: FrameworkLevelModel) {
     event.stopPropagation();
-    this.dialog.open(ConfirmationPopupComponent)
-      .afterClosed().subscribe((answer: boolean) => {
-        if(answer) {
-          this.firestore.collection("frameworkLevels").doc(id).delete();
+    this.dialog
+      .open(ConfirmationPopupComponent)
+      .afterClosed()
+      .subscribe((answer: boolean) => {
+        if (answer) {
+          const batch = this.firestore.firestore.batch();
+          batch.delete(
+            this.firestore.firestore
+              .collection("frameworkLevels")
+              .doc(frameworkLevel.id)
+          );
+          frameworkLevel.children.forEach((child: FrameworkLevelModel) => {
+            batch.delete(
+              this.firestore.firestore
+                .collection("frameworkLevels")
+                .doc(child.id)
+            );
+          });
+          batch.commit();
         }
-    })
+      });
   }
 
   openIndicators(id: string) {
@@ -128,7 +146,7 @@ export class AppComponent implements OnInit {
   }
 
   canAddChild(frameworkLevel: FrameworkLevelModel): boolean {
-    if(frameworkLevel.indicators.length) {
+    if (frameworkLevel.indicators.length) {
       return false;
     } else {
       return frameworkLevel.level !== 2;

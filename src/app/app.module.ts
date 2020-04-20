@@ -28,10 +28,10 @@ import { ConfirmationPopupComponent } from './shared/components/confirmation-pop
 import {MatSortModule} from "@angular/material/sort";
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { IndicatorPopupComponent } from './shared/components/indicator-popup/indicator-popup.component';
-import { NumbersOnlyDirective } from './shared/directives/numbers-only.directive';
 import {MatSelectModule} from '@angular/material/select';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatRippleModule} from "@angular/material/core";
+import { DigitOnlyModule } from '@uiowa/digit-only';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,6 @@ import {MatRippleModule} from "@angular/material/core";
     IndicatorsListComponent,
     ConfirmationPopupComponent,
     IndicatorPopupComponent,
-    NumbersOnlyDirective,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +67,8 @@ import {MatRippleModule} from "@angular/material/core";
     MatProgressBarModule,
     MatSelectModule,
     MatToolbarModule,
-    MatRippleModule
+    MatRippleModule,
+    DigitOnlyModule
   ],
   providers: [],
   bootstrap: [AppComponent],

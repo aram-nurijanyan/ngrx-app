@@ -14,7 +14,6 @@ export class FrameworkLevelPopupComponent implements OnInit {
   descriptionFormControl: FormControl;
   frameworkLevel: FrameworkLevelModel;
   parentId: string;
-  level: number;
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private dialogRef: MatDialogRef<FrameworkLevelPopupComponent>) {}
@@ -22,10 +21,9 @@ export class FrameworkLevelPopupComponent implements OnInit {
   ngOnInit() {
     this.viewMode = this.data.viewMode;
     this.parentId = this.data.parentId;
-    this.level = this.data.level+1 || 0;
     this.frameworkLevel = this.data.frameworkLevel
       ? this.data.frameworkLevel
-      : { name: "", description: "", level: this.level };
+      : { name: "", description: "", level: this.data.level };
     this.nameFormControl = new FormControl({
       value: this.frameworkLevel.name,
       disabled: this.viewMode
