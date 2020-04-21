@@ -74,15 +74,6 @@ export class AppComponent implements OnInit {
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-  showDescription(frameworkLevel: FrameworkLevelModel) {
-    const dialogConfig: MatDialogConfig = new MatDialogConfig();
-    dialogConfig.data = {
-      message: frameworkLevel.description,
-      title: "Description",
-    };
-    this.dialog.open(ShowMessagePopupComponent, dialogConfig);
-  }
-
   openFrameworkLevel(
     event: Event,
     frameworkLevel?: FrameworkLevelModel,
@@ -104,6 +95,8 @@ export class AppComponent implements OnInit {
       .subscribe((level: FrameworkLevelModel) => {
         if (level) {
           if (frameworkLevel && !addChild) {
+            delete level.children;
+            delete level.indicators;
             this.firestore
               .collection("frameworkLevels")
               .doc(frameworkLevel.id)
@@ -146,7 +139,7 @@ export class AppComponent implements OnInit {
   }
 
   canAddChild(frameworkLevel: FrameworkLevelModel): boolean {
-    if (frameworkLevel.indicators.length) {
+    if (frameworkLevel.indicators && frameworkLevel.indicators.length) {
       return false;
     } else {
       return frameworkLevel.level !== 2;

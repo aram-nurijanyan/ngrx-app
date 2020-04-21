@@ -40,7 +40,7 @@ export function getTree(
 }
 
 export function getProgress(frameworkLevel: FrameworkLevelModel): number {
-  if(!frameworkLevel.children.length) {
+  if(!frameworkLevel.children || !frameworkLevel.children.length) {
     return getLevelProgress(frameworkLevel);
   }
   let result: number = 0;
@@ -51,8 +51,8 @@ export function getProgress(frameworkLevel: FrameworkLevelModel): number {
 }
 
 export function getLevelProgress(frameworkLevel: FrameworkLevelModel): number {
-  return frameworkLevel.indicators.reduce((res, indicator) => {
+  return frameworkLevel.indicators ? frameworkLevel.indicators.reduce((res, indicator) => {
     res += indicator.progress/frameworkLevel.indicators.length;
     return res;
-  }, 0);
+  }, 0) : 0;
 }

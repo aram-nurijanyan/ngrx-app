@@ -4,6 +4,9 @@
       "hosting": {
         "ngrx-app": [
           "test-demo-966d9"
+        ],
+        "minime": [
+          "mini-m-e"
         ]
       }
     }
