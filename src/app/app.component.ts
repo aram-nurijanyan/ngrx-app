@@ -2,11 +2,10 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   MatTreeFlatDataSource,
-  MatTreeFlattener,
+  MatTreeFlattener
 } from "@angular/material/tree";
 import { FrameworkLevelModel } from "./shared/models/framework-level.model";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { ShowMessagePopupComponent } from "./shared/components/show-message-popup/show-message-popup.component";
 import { FrameworkLevelPopupComponent } from "./shared/components/framework-level-popup/framework-level-popup.component";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { getProgress, getTree } from "./shared/utils/tree.util";
@@ -26,7 +25,7 @@ interface ExampleFlatNode {
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit {
   selectedLevel: Subject<string> = new Subject<string>();
@@ -36,20 +35,20 @@ export class AppComponent implements OnInit {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
       level: level,
-      item: node,
+      item: node
     };
   };
 
   treeControl = new FlatTreeControl<ExampleFlatNode>(
-    (node) => node.level,
-    (node) => node.expandable
+    node => node.level,
+    node => node.expandable
   );
 
   treeFlattener = new MatTreeFlattener(
     this._transformer,
-    (node) => node.level,
-    (node) => node.expandable,
-    (node) => node.children
+    node => node.level,
+    node => node.expandable,
+    node => node.children
   );
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -62,11 +61,11 @@ export class AppComponent implements OnInit {
     this.firestore
       .collection<FrameworkLevelModel>("frameworkLevels")
       .valueChanges({ idField: "id" })
-      .subscribe((levels) => {
+      .subscribe(levels => {
         this.firestore
           .collection<IndicatorModel>("indicators")
           .valueChanges({ idField: "id" })
-          .subscribe((indicators) => {
+          .subscribe(indicators => {
             this.dataSource.data = getTree(levels, indicators);
           });
       });
@@ -84,8 +83,8 @@ export class AppComponent implements OnInit {
     dialogConfig.data = {
       frameworkLevel: addChild ? null : frameworkLevel,
       parentId: addChild ? frameworkLevel.id : null,
-      level: addChild ? frameworkLevel.level+1 : 0,
-      viewMode: frameworkLevel && !addChild,
+      level: addChild ? frameworkLevel.level + 1 : 0,
+      viewMode: frameworkLevel && !addChild
     };
     dialogConfig.disableClose = true;
     dialogConfig.width = "600px";
@@ -116,18 +115,7 @@ export class AppComponent implements OnInit {
       .subscribe((answer: boolean) => {
         if (answer) {
           const batch = this.firestore.firestore.batch();
-          batch.delete(
-            this.firestore.firestore
-              .collection("frameworkLevels")
-              .doc(frameworkLevel.id)
-          );
-          frameworkLevel.children.forEach((child: FrameworkLevelModel) => {
-            batch.delete(
-              this.firestore.firestore
-                .collection("frameworkLevels")
-                .doc(child.id)
-            );
-          });
+          this.deleteLevel(frameworkLevel, batch);
           batch.commit();
         }
       });
@@ -148,5 +136,21 @@ export class AppComponent implements OnInit {
 
   getProgress(frameworkLevel: FrameworkLevelModel): number {
     return getProgress(frameworkLevel);
+  }
+
+  deleteLevel(frameworkLevel: FrameworkLevelModel, batch: any) {
+    batch.delete(
+      this.firestore.firestore
+        .collection("frameworkLevels")
+        .doc(frameworkLevel.id)
+    );
+    frameworkLevel.indicators.forEach((indicator: IndicatorModel) => {
+      batch.delete(
+        this.firestore.firestore.collection("indicators").doc(indicator.id)
+      );
+    });
+    frameworkLevel.children.forEach((child: FrameworkLevelModel) => {
+      this.deleteLevel(child, batch);
+    });
   }
 }
