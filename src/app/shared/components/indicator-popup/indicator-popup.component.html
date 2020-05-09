@@ -2,26 +2,26 @@
 <mat-dialog-content (keydown.enter)="confirm()">
   <form [formGroup]="indicatorForm">
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Name</mat-label>
+      <mat-label>Անուն</mat-label>
       <input matInput formControlName="name">
       <mat-error *ngIf="indicatorForm.get('name').invalid && indicatorForm.get('name').touched">
-        Name is <strong>required</strong>
+        Անունը <strong>պարտադիր է</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Baseline</mat-label>
+      <mat-label>Ելակետ</mat-label>
       <input matInput formControlName="baseline" digitOnly>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Actual</mat-label>
+      <mat-label>Փաստացի</mat-label>
       <input matInput formControlName="actual" digitOnly>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Target</mat-label>
+      <mat-label>Նպատակային</mat-label>
       <input matInput formControlName="target" digitOnly>
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Unit of measure</mat-label>
+      <mat-label>Չափման միավոր</mat-label>
       <mat-select formControlName="measurement">
         <mat-option *ngFor="let measurement of measurements$ | async" [value]="measurement.name">
           {{measurement.name}}
@@ -31,8 +31,8 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions fxLayout fxLayoutAlign="flex-end">
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close>Չեղարկել</button>
   <button mat-raised-button (click)="confirm()"
           [disabled]="!indicatorForm.valid"
-          color="primary">OK</button>
+          color="primary">Պահպանել</button>
 </mat-dialog-actions>

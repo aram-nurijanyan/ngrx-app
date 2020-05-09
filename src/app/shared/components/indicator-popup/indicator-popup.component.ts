@@ -1,10 +1,8 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {IndicatorModel} from '../../models/indicator.model';
-import {FrameworkLevelModel} from '../../models/framework-level.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Observable} from 'rxjs';
+import {Component, Inject, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Observable} from "rxjs";
 
 @Component({
   selector: "app-indicator-popup",

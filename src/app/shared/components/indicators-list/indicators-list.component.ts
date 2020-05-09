@@ -1,14 +1,14 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {IndicatorModel} from '../../models/indicator.model';
-import {ConfirmationPopupComponent} from '../confirmation-popup/confirmation-popup.component';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {FrameworkLevelModel} from '../../models/framework-level.model';
-import {IndicatorPopupComponent} from '../indicator-popup/indicator-popup.component';
-import {Observable} from 'rxjs';
+import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {IndicatorModel} from "../../models/indicator.model";
+import {ConfirmationPopupComponent} from "../confirmation-popup/confirmation-popup.component";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {IndicatorPopupComponent} from "../indicator-popup/indicator-popup.component";
+import {Observable} from "rxjs";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
   selector: "indicators-list",
@@ -18,6 +18,7 @@ import {Observable} from 'rxjs';
 export class IndicatorsListComponent implements OnInit {
   @Input() getSelectedLevel$: Observable<string>;
   levelId: string;
+
 
   displayedColumns: string[] = [
     "name",
@@ -35,7 +36,10 @@ export class IndicatorsListComponent implements OnInit {
   constructor(private dialog: MatDialog,
               private firestore: AngularFirestore) {}
 
+  decimalPipe = new DecimalPipe(navigator.language);
+
   ngOnInit() {
+    this.changePaginatorLabels();
     this.dataSource = new MatTableDataSource();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -46,6 +50,15 @@ export class IndicatorsListComponent implements OnInit {
           this.dataSource && (this.dataSource.data = data);
         })
     });
+  }
+
+  changePaginatorLabels() {
+    this.paginator._intl.itemsPerPageLabel = 'Քանակը ըստ էջի';
+    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      const start = page * pageSize + 1;
+      const end = (page + 1) * pageSize;
+      return `${start} - ${end} ընդհանուր ${this.decimalPipe.transform(length)}-ից`;
+    };
   }
 
   applyFilter(event: Event) {
@@ -60,7 +73,7 @@ export class IndicatorsListComponent implements OnInit {
   openIndicatorPopup(indicator?: IndicatorModel) {
       const dialogConfig: MatDialogConfig = new MatDialogConfig();
       dialogConfig.data = {
-        title: `${indicator ? "Edit" : "Add"} Indicator`,
+        title: `${indicator ? "Խմբագրել" : "ԱՎելացնել"} Ինդիկատոր`,
         indicator,
         levelId: this.levelId,
       };

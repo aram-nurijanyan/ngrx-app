@@ -4,11 +4,11 @@
   </mat-drawer>
   <mat-drawer-content>
     <mat-toolbar>
-      <h1>Monitoring & Evaluation</h1>
+      <h1>Մոնիտորինգ և Գնահատում</h1>
     </mat-toolbar>
     <mat-card>
       <mat-card-subtitle>
-        Framework Levels
+        Մակարդակներ
       </mat-card-subtitle>
       <mat-card-content>
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
@@ -18,7 +18,7 @@
                          matTreeNodePadding appMatElevation>
             <button mat-icon-button disabled></button>
             {{ node.name }}
-            <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Add Child Level"
+            <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Ավելացնել մակարդակ"
                     (click)="openFrameworkLevel($event, node.item, true)">
               <mat-icon class="mat-icon-rtl-mirror icon">
                 add
@@ -28,13 +28,13 @@
                               [value]="getProgress(node.item)"></mat-progress-bar>
             <span style="margin-left: 1rem">{{getProgress(node.item) | number: '1.0-1'}}%</span>
             <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
-              <button mat-icon-button matTooltip="View"
+              <button mat-icon-button matTooltip="Տեսնել"
                       (click)="openFrameworkLevel($event, node.item)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
                   visibility
                 </mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Delete"
+              <button mat-icon-button matTooltip="Ջնջել"
                       (click)="deleteFrameworkLevel($event, node.item)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
                   delete
@@ -53,7 +53,7 @@
               </mat-icon>
             </button>
             {{ node.name }}
-            <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Add Child Level"
+            <button mat-icon-button *ngIf="canAddChild(node.item)" matTooltip="Ավելացնել մակարդակ"
                     (click)="openFrameworkLevel($event, node.item, true)">
               <mat-icon class="mat-icon-rtl-mirror icon">
                 add
@@ -63,13 +63,13 @@
                               [value]="getProgress(node.item)"></mat-progress-bar>
             <span style="margin-left: 1rem">{{getProgress(node.item) | number: '1.0-1'}}%</span>
             <div fxLayout style="width: 100%" fxLayoutAlign="flex-end">
-              <button mat-icon-button matTooltip="View"
+              <button mat-icon-button matTooltip="Տեսնել"
                       (click)="openFrameworkLevel($event, node.item)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
                   visibility
                 </mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Delete"
+              <button mat-icon-button matTooltip="Ջնջել"
                       (click)="deleteFrameworkLevel($event, node.item)">
                 <mat-icon class="mat-icon-rtl-mirror icon">
                   delete
